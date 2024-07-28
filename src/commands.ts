@@ -48,7 +48,7 @@ async function importPreset(directory?: string) {
 	});
 
 	if (choice) {
-		const keybindings = await loadKeybindings(choice.path)
+		const keybindings = await loadKeybindings(choice.path);
     updateAppKeybindings(keybindings);
 	}
 }
@@ -120,7 +120,16 @@ async function onType(event: { text: string }) {
 	await appState.handleKey(event.text);
 }
 
-export function onSelectionChange(e: vscode.TextEditorSelectionChangeEvent) {
+function isSelecting(): boolean {
+	return vscode.window.activeTextEditor!.selections.some(
+			selection => !selection.anchor.isEqual(selection.active));
+}
+
+export async function onSelectionChange(e: vscode.TextEditorSelectionChangeEvent) {
+	if (appState.mode !== SELECT && isSelecting()) {
+		await setSelectMode();
+	}
+
 	const editor = e.textEditor;
 	if (appState.config.misc.inclusiveRange
 		&& appState.mode === SELECT) {

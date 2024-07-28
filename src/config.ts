@@ -153,7 +153,7 @@ export async function loadKeybindings(uri: vscode.Uri) {
 /// Read config from settings.json
 export async function readConfig() {
 	const config = vscode.workspace.getConfiguration("modalEditor");
-	
+
 	let misc: Misc | undefined = config.get("misc");
 	if (!isMisc(misc)) {
 		vscode.window.showErrorMessage("Invalid misc config");
@@ -164,7 +164,7 @@ export async function readConfig() {
 		...defaultMisc,
 		...misc
 	};
-	
+
 	let keybindings = {};
 	if (misc.keybindingsInSettings) {
 		let keybindings = config.get("keybindings");
@@ -190,7 +190,7 @@ export async function readConfig() {
 		vscode.window.showErrorMessage("Invalid styles in config");
 		styles = {};
 	}
-	
+
 	return {
 		styles,
 		keybindings,
