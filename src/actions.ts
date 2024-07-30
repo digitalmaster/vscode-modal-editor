@@ -142,13 +142,17 @@ export class AppState {
 		this.updateStatus(vscode.window.activeTextEditor);
 	}
 
-	setMode(mode: string) {
+	async setMode(mode: string) {
 		this.mode = mode;
 		this.updateStatus(vscode.window.activeTextEditor);
 		if (mode === SELECT) {
 			// record anchor
 			this.anchors = vscode.window.activeTextEditor?.selections.map(sel => sel.anchor) ?? [];
 		}
+		if (this.mode === NORMAL) {
+			await vscode.commands.executeCommand("modalEditor.clearSelections");
+		}
+
 		this.keyEventHandler = new KeyEventHandler(
 			mode === COMMAND ? this.modeStatusBar : this.keyStatusBar,
 			// keymap in this mode
